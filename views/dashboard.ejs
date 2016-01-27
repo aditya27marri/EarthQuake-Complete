@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+  <title>Earthquake Realtime Dashboard</title>
+  <meta name="description" content="Earthquake Realtime Dashboard Visualization" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Codeply">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="https://cdn.localizejs.com/localize.js"></script>
+
+  <script>!function(a){if(!a.Localize){a.Localize={};for(var e=["translate","untranslate","phrase","initialize","translatePage","setLanguage","getLanguage","detectLanguage","getAvailableLanguages","untranslatePage","bootstrap","prefetch","on","off"],t=0;t<e.length;t++)a.Localize[e[t]]=function(){}}}(window);</script>
+
+  <script>
+  Localize.initialize({
+    key: '6gmpfKwVvTWyP',
+    rememberLanguage: true
+  });
+  </script>
+
+
+
+  <!-- <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> -->
+
+
+  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+  <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+  <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+
+  <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.6/proj4.js"></script>
+
+  <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/mapdata/countries/us/us-all.js"></script>
+
+  <script src="/js/highcharts-theme.js"></script>
+
+  <link href="/stylesheets/highcharts.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/clock.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/stylesheets/styles.css"/>
+
+  <style>
+  .loading {
+    margin-top: 10em;
+    text-align: center;
+    color: gray;
+  }
+  #popUpDiv {
+   position: absolute;
+   left: 85%;
+   transform: translate(-50%);
+
+   padding: 10px;
+   border-radius: 5px;
+   z-index: 9002;
+ }
+ #popUpDiv1 {
+   position: absolute;
+   left: 85%;
+
+   transform: translate(-50%);
+
+   padding: 10px;
+   border-radius: 5px;
+   z-index: 9005;
+ }
+
+ </style>
+</head>
+<body bgcolor="#2f2e2f">
+  <nav id="topNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand page-scroll" href="/"><i class="ion-ios-analytics-outline"></i>Real-time Earthquake</a>
+      </div>
+      <div class="navbar-collapse collapse" id="bs-navbar">
+        <ul class="nav navbar-nav">
+          <li>
+            <a class="page-scroll" href="/globe3d">3D Visualization</a>
+          </li>
+          <!-- <li>
+            <a class="page-scroll" href="/statistics">Statistics</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="/recentearthquakes">Recent Earthquakes</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="/alerts">Set Alerts</a>
+          </li> -->
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+
+  <div id="popUpDiv">
+    <div class="clock">
+      <div id="Date"></div>
+      <ul>
+        <li id="hours"></li>
+        <li id="point">:</li>
+        <li id="min"></li>
+        <li id="point">:</li>
+        <li id="sec"></li>
+      </ul>
+    </div>
+  </div>
+  <div id="container"><div class="mycontent"><br><br><br><br><br><br><br><br><br><br><br><br>Loading...</div></div>
+  <div class="mycontent" >
+    <u><p>Recent 5 Earthquakes</p></u>
+    <div id="recentfive"><div>
+
+    </div>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script> -->
+    <script>
+
+    $(function () {
+
+
+    	var H = getThemedHighchart();
+      var map = H.maps['countries/us/us-all'];
+      var chart;
+
+    	// Add series with state capital bubbles
+
+
+      setInterval(function () {
+        var data = [];
+        $.post( "/getLatestEq", function( text ) {
+          var json = JSON.parse(text);
+          $.each(json, function () {
+           this.z = this.Magnitude;
+           data.push(this);
+         });
+
+          $('#container').highcharts('Map', {
+            title: {
+              text: 'Live Earthquake Map'
+            },
+            tooltip: {
+              formatter: function () {
+                return this.point.place  + '<br>Lat: ' + this.point.lat + ' Lon: ' + this.point.lon + '<br>Magnitude: ' + this.point.Magnitude;
+              },
+              crosshairs: [{
+                zIndex: 5,
+                dashStyle: 'dot',
+                snap: false,
+                color: 'gray'
+              }, {
+                zIndex: 5,
+                dashStyle: 'dot',
+                snap: false,
+                color: 'gray'
+              }]
+            },
+            series: [{
+              name: 'Basemap',
+              mapData: map,
+              borderColor: '#606060',
+              nullColor: 'rgba(200, 200, 200, 0.2)',
+              showInLegend: false
+            }, {
+              name: 'Separators',
+              type: 'mapline',
+              data: H.geojson(map, 'mapline'),
+              color: '#101010',
+              enableMouseTracking: false,
+              showInLegend: false
+            }, {
+              type: 'mapbubble',
+              dataLabels: {
+                enabled: true,
+                format: '{point.capital}'
+              },
+              name: 'Earthquake',
+              data:data,
+              maxSize: '3%',
+              color: H.getOptions().colors[0]
+            }]
+          });
+chart = $('#container').highcharts();
+});
+
+}, 5000);
+    // Display custom label with lat/lon next to crosshairs
+    $('#container').mousemove(function (e) {
+      var position;
+
+      if (chart) {
+        if (!chart.lab) {
+          chart.lab = chart.renderer.text('', 0, 0)
+          .attr({
+            zIndex: 5
+          })
+          .css({
+            color: '#505050'
+          })
+          .add();
+        }
+
+        e = chart.pointer.normalize(e);
+        position = chart.fromPointToLatLon({
+          x: chart.xAxis[0].toValue(e.chartX),
+          y: chart.yAxis[0].toValue(e.chartY)
+        });
+
+        chart.lab.attr({
+          x: e.chartX + 5,
+          y: e.chartY - 22,
+          text: 'Lat: ' + position.lat.toFixed(2) + '<br>Lon: ' + position.lon.toFixed(2)
+        });
+      }
+    });
+
+    $('#container').mouseout(function () {
+      if (chart && chart.lab) {
+        chart.lab.destroy();
+        chart.lab = null;
+      }
+    });
+
+    /////////////////////////////////
+    setInterval(function () {
+     $.post( "/lastfiveEq", function( output ) {
+      console.log(output);
+      var html ='';
+      var data = output.split("|");
+      for(i=0 ; i<data.length ; i++)
+      {
+        html=html+'<div class="section" id="section-1">'+data[i]+'</div>';
+      }
+
+      $("#recentfive").html(html);
+      $('.section').hide();
+      chainAnim('.section',300,'1');
+
+
+    });
+   }, 5000);
+
+
+    $.post( "/lastfiveEq", function( output ) {
+      console.log(output);
+      var html ='';
+      var data = output.split("|");
+      for(i=0 ; i<data.length ; i++)
+      {
+        html=html+'<div class="section" id="section-1">'+data[i]+'</div>';
+      }
+
+      $("#recentfive").html(html);
+      $('.section').hide();
+      chainAnim('.section',300,'1');
+
+
+    });
+    ///////////////////////
+
+    var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+
+// Create a newDate() object
+var newDate = new Date();
+// Extract the current date from Date object
+newDate.setDate(newDate.getDate());
+// Output the day, date, month and year
+$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
+
+setInterval( function() {
+	// Create a newDate() object and extract the seconds of the current time on the visitor's
+	var seconds = new Date().getSeconds();
+	// Add a leading zero to seconds value
+	$("#sec").html(( seconds < 10 ? "0" : "" ) + seconds);
+},1000);
+
+setInterval( function() {
+	// Create a newDate() object and extract the minutes of the current time on the visitor's
+	var minutes = new Date().getMinutes();
+	// Add a leading zero to the minutes value
+	$("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
+},1000);
+
+setInterval( function() {
+	// Create a newDate() object and extract the hours of the current time on the visitor's
+	var hours = new Date().getHours();
+	// Add a leading zero to the hours value
+	$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
+}, 1000);
+
+});
+
+function chainAnim(e,s,o) {
+  var $fade = $(e);
+  var code = function() {console.log('Done.');};
+  $fade.each(function( i ){
+    $(this).delay(i * s).fadeTo(s,o,code);
+  });
+}
+
+</script>
+
+</body>
+</html>

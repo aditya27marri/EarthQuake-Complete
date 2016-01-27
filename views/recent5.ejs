@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    
+<script src="https://cdn.localizejs.com/localize.js"></script>
+
+<script>!function(a){if(!a.Localize){a.Localize={};for(var e=["translate","untranslate","phrase","initialize","translatePage","setLanguage","getLanguage","detectLanguage","getAvailableLanguages","untranslatePage","bootstrap","prefetch","on","off"],t=0;t<e.length;t++)a.Localize[e[t]]=function(){}}}(window);</script>
+
+<script>
+ Localize.initialize({
+  key: '6gmpfKwVvTWyP',
+  rememberLanguage: true
+ });
+</script>
+  </head>
+  <body>
+    <h1><%= rows.Place %></h1>
+    <p>Magnitude to <%= rows.Magnitude %></p>
+    <p>time to <%= rows.TimeOfOccurance %></p>
+    <p>Longitude to <%= rows.Longitude %></p>
+    <p>Latitude to <%= rows.Latitude %></p>
+    
+    
+  </body>
+</html>

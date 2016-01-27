@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Earthquake Realtime Dashboard</title>
+  <meta name="description" content="Earthquake Realtime Dashboard Visualization" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Codeply">
+
+  <script src="https://cdn.localizejs.com/localize.js"></script>
+
+  <script>!function(a){if(!a.Localize){a.Localize={};for(var e=["translate","untranslate","phrase","initialize","translatePage","setLanguage","getLanguage","detectLanguage","getAvailableLanguages","untranslatePage","bootstrap","prefetch","on","off"],t=0;t<e.length;t++)a.Localize[e[t]]=function(){}}}(window);</script>
+
+  <script>
+  Localize.initialize({
+    key: '6gmpfKwVvTWyP',
+    rememberLanguage: true
+  });
+  </script>
+
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+  <link rel="stylesheet" href="./stylesheets/styles.css" />
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script src='./recentQuakesJS/d3.js' type='text/javascript'></script>
+  <script src='./recentQuakesJS/crossfilter.js' type='text/javascript'></script>
+  <script src='./recentQuakesJS/dc.js' type='text/javascript'></script>
+  <script src='./recentQuakesJS/jquery-1.9.1.min.js' type='text/javascript'></script>
+  <script src='./recentQuakesJS/bootstrap.min.js' type='text/javascript'></script>
+  <!-- <script src="css/quakes.csv"></script>*/-->
+  <link href='./stylesheets/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <link href='./stylesheets/dc.css' rel='stylesheet' type='text/css'>
+
+
+
+
+</head>
+
+<body ng-app="app" ng-controller="analysisController" background="./img/bgimage.PNG">
+  <nav id="topNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand page-scroll" href="/"><i class="ion-ios-analytics-outline"></i>Real-time Earthquake</a>
+      </div>
+      <div class="navbar-collapse collapse" id="bs-navbar">
+        <ul class="nav navbar-nav">
+          <li>
+            <a class="page-scroll" href="/dashboard">Dashboard</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="/statistics">Statistics</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="/recentearthquakes">Recent Earthquakes</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="/globe3d">3D Visualization</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="/alerts">Set Alerts</a>
+          </li>
+          <li>
+            <a class="page-scroll" href="/reports">Reports</a>
+          </li>
+            <!-- <li>
+                <a class="page-scroll" href="#last">Contact</a>
+              </li> -->
+            </ul>
+
+          </div>
+        </div>
+      </nav>
+
+      <br><br><br><br><br><br>
+      
+
+      <div>
+        <div style="width:100%" class="container">
+
+
+          <form align="center">
+
+            <span style="vertical-align: middle;">
+
+              <select name="state" id='state' ng-model='state'>
+                <option value="">Select a State...</option>
+                <option value="Alabama">Alabama</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Arizona">Arizona</option>
+                <option value="Arkansas">Arkansas</option>
+                <option value="California">California</option>
+                <option value="Colorado">Colorado</option>
+                <option value="Connecticut">Connecticut</option>
+                <option value="Delaware">Delaware</option>
+                <option value="District Of Columbia">District Of Columbia</option>
+                <option value="Florida">Florida</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Hawaii">Hawaii</option>
+                <option value="Idaho">Idaho</option>
+                <option value="Illinois">Illinois</option>
+                <option value="Indiana">Indiana</option>
+                <option value="Iowa">Iowa</option>
+                <option value="Kansas">Kansas</option>
+                <option value="Kentucky">Kentucky</option>
+                <option value="Louisiana">Louisiana</option>
+                <option value="Maine">Maine</option>
+                <option value="Maryland">Maryland</option>
+                <option value="Massachusetts">Massachusetts</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Minnesota">Minnesota</option>
+                <option value="Mississippi">Mississippi</option>
+                <option value="Missouri">Missouri</option>
+                <option value="Montana">Montana</option>
+                <option value="Nebraska">Nebraska</option>
+                <option value="Nevada">Nevada</option>
+                <option value="New Hampshire">New Hampshire</option>
+                <option value="New Jersey">New Jersey</option>
+                <option value="New Mexico">New Mexico</option>
+                <option value="New York">New York</option>
+                <option value="North Carolina">North Carolina</option>
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+              </select>
+            </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="test">
+              <button type="button" id="myBtn" ng-click="send()" class="btn-success btn-large">Display Graph</button>
+            </span>
+          </form>
+        </div>
+      </div>
+
+      <!-- <section style="background-color: #82a43a;" class="bg-primary" id="one"> -->
+      <div class="bg-primary" style="background-color: #eee; color:#000000;">
+        <div class="container">
+
+          <div class='container' id='main-container'>
+            <div class='content'>
+              <div class='container' style='font: 12px sans-serif;'>
+
+                <div class='row'>
+                  <div class='span12'>
+                    <h3>{{state}} Earthquakes</h3>
+                    <div class='row'>
+                      <div class='pie-graph span6' id='dc-magnitude-chart'>
+                        <h4>Earthquakes by Magnitude</h4>
+                      </div>
+                      <div class='pie-graph span6' id='dc-depth-chart'>
+                        <h4>Earthquakes by Depth (km)</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class='row'>
+                  <div class='span12' id='dc-time-chart'>
+                    <h4>Earthquakes per hour</h4>
+                  </div> -->
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <script>
+      var app = angular.module('app', []);
+
+      var state, url;
+
+      $("#state").change(function () {
+        state = this.value;
+        console.log(state);
+        url="./forState/"+state;
+        console.log("URL: "+url);
+      });
+
+
+
+      app.controller("analysisController", function($scope, $http)
+      {
+        console.log("inside controller");
+    //$scope.url = $window.url;
+
+
+    $scope.url = "./forState/"+$scope.state;
+
+    console.log("URL inside Angular: "+$scope.url);
+    $scope.send = function()
+    {
+     console.log("inside send");
+     console.log("State value: "+$scope.state);
+     console.log("URL value inside Angular: "+url);
+
+     $http({
+      method: 'GET',
+      url: url
+    }).success(function(res){
+
+      console.log("Printing Response: "+res);
+      console.log(JSON.stringify(res));
+      var data = res;
+
+
+      var dtgFormat = d3.time.format("%Y-%m-%dT%H:%M:%S");
+
+      data.forEach(function(d) {
+        d.TimeOfOccurance_state = Number(d.TimeOfOccurance_state);
+        var temp = new Date(d.TimeOfOccurance_state).toISOString();
+
+        d.dtg   = dtgFormat.parse(temp.substr(0,19));
+        d.lat   = +d.Latitude_state;
+        d.lon  = +d.Longitude_state;
+        d.mag   = d3.round(+d.Magnitude_state,1);
+        d.depth = d3.round(+d.Depth_state,0);
+
+
+        console.log("\nPrinting chart values\n");
+        console.log("d.dtg: "+d.dtg);
+        console.log("d.lat: "+d.lat);
+        console.log("d.lon:"+ d.lon);
+        console.log("d.mag: "+d.mag);
+        console.log("d.depth: "+d.depth);
+
+
+      });
+
+  /******************************************************
+  * Step1: Create the dc.js chart objects & ling to div *
+  ******************************************************/
+
+  var magnitudeChart = dc.barChart("#dc-magnitude-chart");
+  var depthChart = dc.barChart("#dc-depth-chart");
+  var timeChart = dc.lineChart("#dc-time-chart");
+  var dataTable = dc.dataTable("#dc-table-graph");
+
+  /****************************************
+  *   Run the data through crossfilter    *
+  ****************************************/
+
+    var facts = crossfilter(data);  // Gets our 'facts' into crossfilter
+
+  /******************************************************
+  * Create the Dimensions                               *
+  * A dimension is something to group or filter by.     *
+  * Crossfilter can filter by exact value, or by range. *
+  ******************************************************/
+
+    // for Magnitude
+    var magValue = facts.dimension(function (d) {
+      return d.mag;       // group or filter by magnitude
+    });
+
+    var magValueGroupSum = magValue.group()
+      .reduceSum(function(d) { return d.mag; });  // sums the magnitudes per magnitude
+      var magValueGroupCount = magValue.group()
+      .reduceCount(function(d) { return d.mag; }) // counts the number of the facts by magnitude
+
+    // For datatable
+    var timeDimension = facts.dimension(function (d) {
+      return d.dtg;
+    }); // group or filter by time
+
+    // for Depth
+    var depthValue = facts.dimension(function (d) {
+      return d.depth;
+    });
+    var depthValueGroup = depthValue.group();
+
+    // define a daily volume Dimension
+    var volumeByDay = facts.dimension(function(d) {
+      return d3.time.hour(d.dtg);
+    });
+    // map/reduce to group sum
+    var volumeByDayGroup = volumeByDay.group()
+    .reduceCount(function(d) { return d.dtg; });
+
+  /***************************************
+  *   Step4: Create the Visualisations   *
+  ***************************************/
+
+    // Magnitide Bar Graph Summed
+    magnitudeChart.width(480)
+    .height(150)
+    .margins({top: 10, right: 10, bottom: 20, left: 40})
+      .dimension(magValue)                // the values across the x axis
+      .group(magValueGroupSum)              // the values on the y axis
+      .transitionDuration(500)
+      .centerBar(true)
+    .gap(56)                                            // bar width Keep increasing to get right then back off.
+    .x(d3.scale.linear().domain([0.5, 7.5]))
+    .elasticY(true)
+    .xAxis().tickFormat(function(v) {return v;});
+
+    // Depth bar graph
+    depthChart.width(480)
+    .height(150)
+    .margins({top: 10, right: 10, bottom: 20, left: 40})
+    .dimension(depthValue)
+    .group(depthValueGroup)
+    .transitionDuration(500)
+    .centerBar(true)
+    .gap(1)                    // bar width Keep increasing to get right then back off.
+    .x(d3.scale.linear().domain([0, 100]))
+    .elasticY(true)
+    .xAxis().tickFormat(function(v) {return v;});
+
+    // time graph
+    timeChart.width(960)
+    .height(100)
+    .margins({top: 10, right: 10, bottom: 20, left: 40})
+    .dimension(volumeByDay)
+    .group(volumeByDayGroup)
+    .transitionDuration(500)
+    .elasticY(true)
+      .x(d3.time.scale().domain([new Date(2013, 6, 18), new Date(2013, 6, 24)])) // scale and domain of the graph
+      .xAxis();
+
+
+  /****************************
+  * Step6: Render the Charts  *
+  ****************************/
+
+  dc.renderAll();
+
+
+  console.log($scope.list);
+                // } else {
+                //   console.log("inside else");
+
+                // }
+              }).error(function(error){
+                console.log("error");
+                alert("Select a state");
+              });
+
+  //}
+  //);
+};
+});
+</script>
+
+<!--scripts loaded here from cdn for performance -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>
+<!-- <script src="./recentQuakesJS/scripts.js"></script> -->
+</body>
+
+</html>

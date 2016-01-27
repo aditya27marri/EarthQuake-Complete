@@ -1,0 +1,98 @@
+@CHARSET "ISO-8859-1";
+
+@font-face {
+    font-family: 'BebasNeueRegular';
+    src: url('BebasNeue-webfont.eot');
+    src: url('BebasNeue-webfont.eot?#iefix') format('embedded-opentype'),
+         url('BebasNeue-webfont.woff') format('woff'),
+         url('BebasNeue-webfont.ttf') format('truetype'),
+         url('BebasNeue-webfont.svg#BebasNeueRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.container {
+    width: 260px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.clock {
+    width: 260px;
+    margin: 0 auto;
+    padding: 24px;
+    border: 0px solid #333;
+    color: #fff;
+}
+.mycontent{
+font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    text-align: center;
+    color: white;
+    text-shadow: 0 0 5px #00c6ff;
+}
+
+#Date {
+    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 0 0 5px #00c6ff;
+}
+
+ul {
+    width: 260px;
+    margin: 0 auto;
+    padding: 0px;
+    list-style: none;
+    text-align: center;
+}
+
+ul li {
+    display: inline;
+    font-size: 24px;
+    text-align: center;
+    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    text-shadow: 0 0 5px #00c6ff;
+}
+
+#point {
+    position: relative;
+    -moz-animation: mymove 1s ease infinite;
+    -webkit-animation: mymove 1s ease infinite;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* Simple Animation */
+@-webkit-keyframes mymove {
+    0% {opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+}
+
+50% {
+    opacity: 0;
+    text-shadow: none;
+}
+
+100% {
+    opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+}	
+}
+
+@-moz-keyframes mymove {
+    0% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    }
+
+    50% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    100% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    };
+}
